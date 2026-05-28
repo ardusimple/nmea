@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.cover
+.coverage
+htmlcov/
+
+# C
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.map
+*.d
+*.elf
+*.hex
+*.bin
+*.lst
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
