@@ -1,0 +1,27 @@
+[project]
+name = "nmea"
+description = "A Python library for parsing, validating, and serializing NMEA messages."
+version = "0.1.0"
+keywords = ["nmea", "gps", "gnss", "parser"]
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Marc Vilella", email = "mvilella@eps-works.com" }]
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-asyncio"]
+
+[project.urls]
+Repository = "https://github.com/eps-works/nmea"
+Issues = "https://github.com/eps-works/nmea/issues"
+
+[tool.pylint]
+ignore = ["__pycache__", ".venv"]
+
+[tool.black]
+line-length = 100
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "function"
+pythonpath = ["."]
