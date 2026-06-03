@@ -67,6 +67,100 @@ async def forward(reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
 | GSV | GNSS satellites in view |
 | GSA | GNSS DOP and active satellites |
 
+### Message field reference
+
+You can inspect fields programmatically with:
+
+```python
+from nmea import MESSAGES
+
+# Display all fields for a message
+print(MESSAGES['GGA'])
+```
+
+#### GGA — Global positioning system fix data
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| time | time | UTC time (HH:MM:SS.mmm) |
+| lat | float | Latitude in decimal degrees |
+| lat_dir | str | N or S |
+| lon | float | Longitude in decimal degrees |
+| lon_dir | str | E or W |
+| fix | FixType | 0=invalid, 1=GPS, 2=DGPS, 3=PPS, 4=RTK, 5=RTK float, 6=estimated, 7=manual, 8=simulation |
+| num_satellites | int | Number of satellites in use |
+| hdop | float | Horizontal dilution of precision |
+| alt | float | Altitude above mean sea level |
+| alt_unit | str | M (meters) |
+| geoid_height | float | Height above ellipsoid |
+| geoid_height_unit | str | M (meters) |
+| age | float | Age of differential GPS data (seconds) |
+| station | str | Station ID |
+
+#### GLL — Geographic position
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| lat | float | Latitude in decimal degrees |
+| lat_dir | str | N or S |
+| lon | float | Longitude in decimal degrees |
+| lon_dir | str | E or W |
+| time | time | UTC time (HH:MM:SS.mmm) |
+| status | str | A=valid, V=invalid |
+| mode | str | Mode indicator (A=autonomous, D=differential) |
+
+#### GST — GNSS pseudorange error statistics
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| time | time | UTC time (HH:MM:SS.mmm) |
+| rms_range | float | RMS range error |
+| std_major | float | Standard deviation of major axis (m) |
+| std_minor | float | Standard deviation of minor axis (m) |
+| angle_major | float | Orientation of major axis (degrees) |
+| std_lat | float | Standard deviation of latitude (m) |
+| std_lon | float | Standard deviation of longitude (m) |
+| std_alt | float | Standard deviation of altitude (m) |
+
+#### RMC — Recommended minimum specific data
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| time | time | UTC time (HH:MM:SS.mmm) |
+| status | DataValidity | A=valid, V=invalid |
+| lat | float | Latitude in decimal degrees |
+| lat_dir | str | N or S |
+| lon | float | Longitude in decimal degrees |
+| lon_dir | str | E or W |
+| speed | float | Speed over ground (knots) |
+| course | float | Course over ground (degrees true) |
+| date | str | Date (DDMMYY) |
+| mag_variation | float | Magnetic variation (degrees) |
+| mag_variation_dir | str | E or W |
+| pos_mode | str | Positioning mode indicator |
+
+#### GSV — GNSS satellites in view
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| total_msg | int | Total number of sentences in this sequence |
+| msg_num | int | Sentence number |
+| visible_satellites | int | Total number of visible satellites |
+| satellites | list[Satellite] | List of Satellite(prn, elevation, azimuth, snr) |
+| signal_id | str | Signal ID (optional, NMEA 4.1+) |
+
+#### GSA — GNSS DOP and active satellites
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| op_mode | OperationMode | M=manual, A=automatic |
+| nav_mode | NavigationMode | 1=not available, 2=2D fix, 3=3D fix |
+| prns | list[int] | PRNs of satellites used in solution (up to 12) |
+| pdop | float | Position dilution of precision |
+| hdop | float | Horizontal dilution of precision |
+| vdop | float | Vertical dilution of precision |
+| system_id | Talker | GNSS system identifier (optional, NMEA 4.1+) |
+
 ### Extending with custom messages
 
 New message types can be registered by adding entries to the `MESSAGES` dict.

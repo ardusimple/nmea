@@ -91,7 +91,14 @@ class FieldCodec(NamedTuple):
 
 
 class Field(NamedTuple):
-    """Descriptor for a single field within an NMEA message."""
+    """Descriptor for a single field within an NMEA message.
+
+    Attributes:
+        name: Field name (e.g., 'lat', 'lon', 'time')
+        type: Expected Python type (e.g., float, str, datetime.time)
+        codec: Optional FieldCodec for parsing/serializing special formats
+        required: Whether this field must be present in the message
+    """
 
     name: str
     type: Type
@@ -100,7 +107,20 @@ class Field(NamedTuple):
 
 
 class Message(NamedTuple):
-    """Descriptor for a supported NMEA message type."""
+    """Descriptor for a supported NMEA message type.
+
+    Attributes:
+        name: Message type identifier (e.g., 'GGA', 'RMC', 'GSV')
+        fields: List of Field descriptors defining the message structure
+        parse: Optional custom parser for non-standard field layouts
+        refine: Optional post-processor to transform parsed fields
+        validate: Optional validator returning True if fields are valid
+        serialize: Optional custom serializer for non-standard formats
+
+    Inspect fields with:
+        from nmea import MESSAGES
+        print(MESSAGES['GGA'])
+    """
 
     name: str
     fields: List[Field]
@@ -108,6 +128,10 @@ class Message(NamedTuple):
     refine: Callable[[Dict[str, Any]], Dict[str, Any]] | None = None
     validate: Callable[[Dict[str, Any]], bool] | None = None
     serialize: Callable[[NMEA], List[str]] | None = None
+
+    def __repr__(self) -> str:
+        fields_str = "\n  ".join(f"{f.name}: {f.type.__name__}" for f in self.fields)
+        return f"Message({self.name})\nFields:\n  {fields_str}"
 
 
 def apply_hemisphere(fields: Dict[str, Any]) -> Dict[str, Any]:
