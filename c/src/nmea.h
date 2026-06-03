@@ -82,67 +82,71 @@ typedef struct
 
 /* Message payloads ─────────────────────────────────────────────────────── */
 
-/* GGA – fix data */
+/* GGA – Global positioning system fix data */
 typedef struct
 {
-    nmea_time_t time;
-    double lat, lon; /* decimal degrees; negative = S/W */
-    nmea_fix_t fix;
-    int num_satellites;
-    double hdop, alt, geoid_height;
-    double age;  /* NAN if absent */
-    int station; /* 0 if absent   */
+    nmea_time_t time;           /* UTC time (HH:MM:SS.mmm) */
+    double lat, lon;            /* decimal degrees; negative = S/W */
+    nmea_fix_t fix;             /* 0=invalid, 1=GPS, 2=DGPS, 3=PPS, 4=RTK, 5=RTK float, 6=est, 7=manual, 8=sim */
+    int num_satellites;         /* satellites in solution */
+    double hdop, alt;           /* horizontal DOP, altitude (m) */
+    double geoid_height;        /* height above ellipsoid (m) */
+    double age;                 /* differential GPS age (sec), NAN if absent */
+    int station;                /* station ID, 0 if absent */
 } nmea_gga_t;
 
-/* GLL – geographic position */
+/* GLL – Geographic position, Latitude, Longitude */
 typedef struct
 {
-    double lat, lon;
-    nmea_time_t time;
-    char status; /* 'A' valid, 'V' invalid */
-    char mode;   /* '\0' if absent (pre-NMEA 2.3) */
+    double lat, lon;            /* decimal degrees; negative = S/W */
+    nmea_time_t time;           /* UTC time (HH:MM:SS.mmm) */
+    char status;                /* 'A'=valid, 'V'=invalid */
+    char mode;                  /* 'A'=autonomous, 'D'=differential; '\0' if absent */
 } nmea_gll_t;
 
-/* GST – pseudorange noise statistics */
+/* GST – GNSS pseudorange error statistics */
 typedef struct
 {
-    nmea_time_t time;
-    double rms_range;
-    double std_major, std_minor, angle_major;
-    double std_lat, std_lon, std_alt;
+    nmea_time_t time;           /* UTC time (HH:MM:SS.mmm) */
+    double rms_range;           /* RMS range error (m) */
+    double std_major, std_minor; /* standard deviation of error ellipse axes (m) */
+    double angle_major;         /* orientation of major axis (degrees true) */
+    double std_lat, std_lon;    /* standard deviation of latitude, longitude (m) */
+    double std_alt;             /* standard deviation of altitude (m) */
 } nmea_gst_t;
 
-/* RMC – recommended minimum data */
+/* RMC – Recommended Minimum Navigation Information */
 typedef struct
 {
-    nmea_time_t time;
-    char status; /* 'A' or 'V'         */
-    double lat, lon;
-    double speed, course;
-    char date[7];         /* "DDMMYY\0"         */
-    double mag_variation; /* NAN if absent      */
-    char mag_dir;         /* '\0' if absent     */
-    char pos_mode;        /* '\0' if absent     */
+    nmea_time_t time;           /* UTC time (HH:MM:SS.mmm) */
+    char status;                /* 'A'=valid, 'V'=invalid */
+    double lat, lon;            /* decimal degrees; negative = S/W */
+    double speed, course;       /* speed over ground (knots), course true (degrees) */
+    char date[7];               /* "DDMMYY\0" format */
+    double mag_variation;       /* magnetic variation (degrees), NAN if absent */
+    char mag_dir;               /* 'E' or 'W'; '\0' if absent */
+    char pos_mode;              /* positioning mode; '\0' if absent */
 } nmea_rmc_t;
 
-/* GSV – satellites in view */
+/* GSV – GNSS Satellites in View */
 typedef struct
 {
-    int total_msg, msg_num, visible_satellites;
-    int num_satellites;
-    nmea_satellite_t satellites[NMEA_MAX_SATELLITES];
-    char signal_id[4]; /* empty string if absent */
+    int total_msg, msg_num;     /* total sentences in sequence, current sentence number */
+    int visible_satellites;     /* total number of visible satellites */
+    int num_satellites;         /* number of satellite entries in this sentence (0-4) */
+    nmea_satellite_t satellites[NMEA_MAX_SATELLITES]; /* satellite data (prn, elevation, azimuth, snr) */
+    char signal_id[4];          /* signal ID (e.g., "L1"); empty string if absent */
 } nmea_gsv_t;
 
-/* GSA – DOP and active satellites */
+/* GSA – GNSS DOP and Active Satellites */
 typedef struct
 {
-    char op_mode; /* 'M' manual, 'A' automatic */
-    nmea_nav_mode_t nav_mode;
-    int num_prns;
-    uint8_t prns[NMEA_MAX_PRNS];
-    double pdop, hdop, vdop;
-    nmea_talker_t system_id; /* NMEA_TALKER_UNKNOWN if absent */
+    char op_mode;               /* 'M'=manual, 'A'=automatic */
+    nmea_nav_mode_t nav_mode;   /* 1=not available, 2=2D fix, 3=3D fix */
+    int num_prns;               /* number of PRNs in solution (0-12) */
+    uint8_t prns[NMEA_MAX_PRNS]; /* PRNs of satellites used in solution */
+    double pdop, hdop, vdop;    /* position, horizontal, vertical dilution of precision */
+    nmea_talker_t system_id;    /* GNSS system identifier (NMEA 4.1+); NMEA_TALKER_UNKNOWN if absent */
 } nmea_gsa_t;
 
 /* Top-level sentence ───────────────────────────────────────────────────── */

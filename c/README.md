@@ -107,6 +107,82 @@ nmea_framer_t     // opaque state machine; stack-allocate, init before use
 
 Absent optional fields use `NAN` (doubles) or `'\0'` (chars) as sentinels.
 
+### Message field reference
+
+Each struct is documented in [src/nmea.h](src/nmea.h) with inline comments. Use your IDE hover tooltips or grep:
+
+```sh
+grep -A 10 "typedef struct" src/nmea.h | grep -A 10 "nmea_gga_t"
+```
+
+#### nmea_gga_t — Global positioning system fix data
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| time | nmea_time_t | UTC time (HH:MM:SS.mmm) |
+| lat, lon | double | decimal degrees; negative = S/W |
+| fix | nmea_fix_t | 0=invalid, 1=GPS, 2=DGPS, 3=PPS, 4=RTK, 5=RTK float, 6=est, 7=manual, 8=sim |
+| num_satellites | int | satellites in solution |
+| hdop | double | horizontal dilution of precision |
+| alt | double | altitude above mean sea level (m) |
+| geoid_height | double | height above ellipsoid (m) |
+| age | double | differential GPS age (sec); NAN if absent |
+| station | int | station ID; 0 if absent |
+
+#### nmea_gll_t — Geographic position, Latitude, Longitude
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| lat, lon | double | decimal degrees; negative = S/W |
+| time | nmea_time_t | UTC time (HH:MM:SS.mmm) |
+| status | char | 'A'=valid, 'V'=invalid |
+| mode | char | 'A'=autonomous, 'D'=differential; '\0' if absent |
+
+#### nmea_gst_t — GNSS pseudorange error statistics
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| time | nmea_time_t | UTC time (HH:MM:SS.mmm) |
+| rms_range | double | RMS range error (m) |
+| std_major, std_minor | double | standard deviation of error ellipse axes (m) |
+| angle_major | double | orientation of major axis (degrees true) |
+| std_lat, std_lon | double | standard deviation of latitude, longitude (m) |
+| std_alt | double | standard deviation of altitude (m) |
+
+#### nmea_rmc_t — Recommended Minimum Navigation Information
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| time | nmea_time_t | UTC time (HH:MM:SS.mmm) |
+| status | char | 'A'=valid, 'V'=invalid |
+| lat, lon | double | decimal degrees; negative = S/W |
+| speed, course | double | speed over ground (knots), course true (degrees) |
+| date | char[7] | "DDMMYY\0" format |
+| mag_variation | double | magnetic variation (degrees); NAN if absent |
+| mag_dir | char | 'E' or 'W'; '\0' if absent |
+| pos_mode | char | positioning mode; '\0' if absent |
+
+#### nmea_gsv_t — GNSS Satellites in View
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| total_msg, msg_num | int | total sentences in sequence, current sentence number |
+| visible_satellites | int | total number of visible satellites |
+| num_satellites | int | number of satellite entries in this sentence (0-4) |
+| satellites | nmea_satellite_t[16] | satellite data: prn, elevation, azimuth, snr |
+| signal_id | char[4] | signal ID (e.g., "L1"); empty string if absent |
+
+#### nmea_gsa_t — GNSS DOP and Active Satellites
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| op_mode | char | 'M'=manual, 'A'=automatic |
+| nav_mode | nmea_nav_mode_t | 1=not available, 2=2D fix, 3=3D fix |
+| num_prns | int | number of PRNs in solution (0-12) |
+| prns | uint8_t[12] | PRNs of satellites used in solution |
+| pdop, hdop, vdop | double | position, horizontal, vertical dilution of precision |
+| system_id | nmea_talker_t | GNSS system identifier (NMEA 4.1+); NMEA_TALKER_UNKNOWN if absent |
+
 ### Adding a new message type
 
 1. Add a payload struct (`nmea_xxx_t`) and a `NMEA_MSG_XXX` enum value to [include/nmea.h](include/nmea.h).
