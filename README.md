@@ -7,6 +7,7 @@ Implementations of the NMEA protocol — parsing, validation, serialization, and
 | Language | Path |
 | --- | --- |
 | Python | [python](/python/README.md) |
+| C | [c](/c/README.md) |
 
 ## What is NMEA?
 

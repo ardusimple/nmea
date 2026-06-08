@@ -1,0 +1,7 @@
+[
+  {
+    "directory": ".",
+    "command": "cc -Wall -Wextra -O2 -std=c11 -Isrc -c src/nmea.c -o nmea.o",
+    "file": "src/nmea.c"
+  }
+]
