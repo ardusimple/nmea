@@ -34,8 +34,11 @@ htmlcov/
 # IDE
 .vscode/
 .idea/
+.cache/
 *.swp
 *.swo
+*.plist
+*.gch
 
 # OS
 .DS_Store
