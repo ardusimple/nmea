@@ -31,6 +31,12 @@ htmlcov/
 *.bin
 *.lst
 
+# TypeScript
+node_modules/
+dist/
+*.tsbuildinfo
+*.log
+
 # IDE
 .vscode/
 .idea/
