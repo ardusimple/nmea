@@ -1,0 +1,33 @@
+{
+  "name": "nmea",
+  "version": "1.0.0",
+  "description": "NMEA GNSS sentence parsing and serialization",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint .",
+    "format": "prettier --write src"
+  },
+  "keywords": [
+    "nmea",
+    "gnss",
+    "gps",
+    "parsing",
+    "serialization"
+  ],
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.10.0",
+    "eslint": "^9.18.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.4.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.18.0"
+  }
+}
