@@ -8,6 +8,7 @@ Implementations of the NMEA protocol — parsing, validation, serialization, and
 | --- | --- |
 | Python | [python](/python/README.md) |
 | C | [c](/c/README.md) |
+| TypeScript | [typescript](/typescript/README.md) |
 
 ## What is NMEA?
 
